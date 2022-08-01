@@ -1,15 +1,53 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import { useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
 
 function Signup() {
-  const [sidebar, setsidebar] = useState();
+
+  const [show,setShow] = useState(false);
+  const navigate = useNavigate()
+
+ 
+
+  const [firstName,setFirstName] = useState("");
+  const [lastName,setLastName] = useState("");
+  const [email,setEmail] = useState("");
+  const [password,setPassword] = useState("");
+  const [username,setUsername] = useState("");
+  const {token} = useSelector(state=>state.auth)
+    useEffect(()=>{
+    if(token) navigate("/notes")
+  },[token])
+
+  const handleSubmit = async (e)=>{
+    try {
+      e.preventDefault()
+      console.log({firstName,lastName,email,password,username});
+      const response = await axios.post("http://localhost:8080/auth/register",{firstName,lastName,email,password,username})
+      console.log(response)
+      const {data:{success,message}} = response;
+      console.log(response);
+      if(success){
+        navigate("/login")
+        return toast.success(message)
+      }else{
+         return toast.error(message)
+      }
+    } catch (error) {
+      console.log(error)
+      return toast.error(error.message)
+    }
+  }
+
   return (
     <div
       style={{ height: "100vh" }}
       className="h-full bg-gradient-to-r from-slate-900 via-purple-900 to-slate-900 w-full py-6 px-4"
     >
       <div className="flex flex-col items-center justify-center">
-        <div className="bg-white shadow rounded lg:w-1/3  md:w-1/2 w-full p-10 mt-16">
+        <div className="bg-white shadow rounded lg:w-1/3  md:w-1/2 w-full p-10 mt-5">
           <p
             tabIndex={0}
             role="heading"
@@ -38,14 +76,28 @@ function Signup() {
             </p>
             <hr className="w-full bg-gray-400  " />
           </div>
-          <div>
+          <form onSubmit={handleSubmit}>
+            <div>
             <lable className="text-sm font-medium leading-none text-gray-800">
               Email
             </lable>
             <input
+            onChange={e => setEmail(e.target.value)}
               aria-label="enter email adress"
               role="input"
               type="email"
+              className="bg-gray-200 border rounded focus:outline-none text-xs font-medium leading-none text-gray-800 py-3 w-full pl-3 mt-2"
+            />
+          </div>
+           <div className="mt-6">  
+            <lable className="text-sm font-medium leading-none text-gray-800">
+              User Name
+            </lable>
+            <input
+            onChange={e=>setUsername(e.target.value)}
+              aria-label="enter username"
+              role="input"
+              type="text"
               className="bg-gray-200 border rounded focus:outline-none text-xs font-medium leading-none text-gray-800 py-3 w-full pl-3 mt-2"
             />
           </div>
@@ -54,6 +106,7 @@ function Signup() {
               First Name
             </lable>
             <input
+            onChange={e=>setFirstName(e.target.value)}
               aria-label="enter first name"
               role="input"
               type="text"
@@ -65,6 +118,7 @@ function Signup() {
               Last Name
             </lable>
             <input
+            onChange={e=>setLastName(e.target.value)}
               aria-label="enter last name"
               role="input"
               type="text"
@@ -77,12 +131,13 @@ function Signup() {
             </lable>
             <div className="relative flex items-center justify-center">
               <input
+                onChange={e=>setPassword(e.target.value)}
                 aria-label="enter Password"
                 role="input"
-                type="password"
+                type={show ? "text" : "password"}
                 className="bg-gray-200 border rounded focus:outline-none text-xs font-medium leading-none text-gray-800 py-3 w-full pl-3 mt-2"
               />
-              <div className="absolute right-0 mt-2 mr-3 cursor-pointer">
+              <div onClick={()=>setShow(prev=>!prev)} className="absolute right-0 mt-2 mr-3 cursor-pointer">
                 <svg
                   width={16}
                   height={16}
@@ -100,6 +155,8 @@ function Signup() {
           </div>
           <div className="mt-8">
             <button
+            // onClick={handleSubmit}
+            type="submit"
               role="button"
               aria-label="create my account"
               className="focus:ring-2 focus:ring-offset-2 focus:ring-indigo-700 text-sm font-semibold leading-none text-white focus:outline-none bg-indigo-700 border rounded hover:bg-indigo-600 py-4 w-full"
@@ -107,6 +164,8 @@ function Signup() {
               Signup
             </button>
           </div>
+          </form>
+          
         </div>
       </div>
     </div>

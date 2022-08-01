@@ -1,6 +1,16 @@
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 const Navbar = () => {
+  const dispatch = useDispatch();
+  const { token } = useSelector((state) => state.auth);
+
+  const handleLogout = () => {
+    dispatch({
+      type: "LOGOUT_USER",
+    });
+  };
+
   return (
     <nav className="bg-white border-gray-200 px-2 sm:px-4 py-1.5  bg-gradient-to-r from-slate-800 via-purple-700 to-slate-900">
       <div className="container flex flex-wrap justify-between items-center mx-auto">
@@ -47,33 +57,48 @@ const Navbar = () => {
                 Home
               </Link>
             </li>
-            <li>
-              <Link
-                to="/login"
-                className="block py-2 pr-4 pl-3 text-white bg-blue-700 rounded md:bg-transparent md:text-white md:p-0 text-white"
-                aria-current="page"
-              >
-                Login
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/signup"
-                className="block py-2 pr-4 pl-3 text-white bg-blue-700 rounded md:bg-transparent md:text-white md:p-0 text-white"
-                aria-current="page"
-              >
-                Signup
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/notes"
-                className="block py-2 pr-4 pl-3 text-white bg-blue-700 rounded md:bg-transparent md:text-white md:p-0 text-white"
-                aria-current="page"
-              >
-                Notes
-              </Link>
-            </li>
+            {!token && (
+              <>
+                <li>
+                  <Link
+                    to="/login"
+                    className="block py-2 pr-4 pl-3 text-white bg-blue-700 rounded md:bg-transparent md:text-white md:p-0 text-white"
+                    aria-current="page"
+                  >
+                    Login
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/signup"
+                    className="block py-2 pr-4 pl-3 text-white bg-blue-700 rounded md:bg-transparent md:text-white md:p-0 text-white"
+                    aria-current="page"
+                  >
+                    Signup
+                  </Link>
+                </li>
+              </>
+            )}
+
+            {token && (
+              <>
+                <li>
+                  <Link
+                    to="/notes"
+                    className="block py-2 pr-4 pl-3 text-white bg-blue-700 rounded md:bg-transparent md:text-white md:p-0 text-white"
+                    aria-current="page"
+                  >
+                    Notes
+                  </Link>
+                </li>
+                <li
+                  className="block py-2 pr-4 pl-3 text-white bg-blue-700 rounded md:bg-transparent md:text-white md:p-0 text-white"
+                  onClick={handleLogout}
+                >
+                  Logout
+                </li>
+              </>
+            )}
           </ul>
         </div>
       </div>

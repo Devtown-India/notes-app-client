@@ -3,7 +3,10 @@ import { composeWithDevTools } from 'redux-devtools-extension'
 import reducer from './reducer/index'
 
 const initialState={
-    todos:["go to the gym","go to the store","go to the bank"],
+    auth:{
+        token:null,
+        user: null
+    },
     loading:false
 }
 const store = createStore(reducer, initialState, composeWithDevTools())
