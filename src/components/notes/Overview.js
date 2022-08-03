@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 const Overview = () => {
     return (
         <div  >
@@ -38,7 +39,9 @@ const Overview = () => {
                     </ul>
                 </div>
                 <div className="mt-6 md:mt-0">
+                    <Link to="/notes/add" >
                     <button className="mr-3 bg-white dark:bg-gray-700 focus:outline-none transition duration-150 ease-in-out rounded hover:bg-gray-300 text-indigo-700 dark:hover:bg-gray-200 dark:text-indigo-600 px-5 py-2 text-sm">Add Note</button>
+                    </Link>
     
                 </div>
                 {/* Code block ends */}
