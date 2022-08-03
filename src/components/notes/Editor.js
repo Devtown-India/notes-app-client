@@ -1,18 +1,19 @@
 import React, { useState, useRef, useMemo, useEffect } from "react";
 import JoditEditor from "jodit-react";
 
-const Editor = ({ placeholder, setEditor }) => {
+const Editor = ({ placeholder, setEditor,prevContent }) => {
   const editor = useRef(null);
   const [content, setContent] = useState("");
-
   const config = {
     readonly: false,
     placeholder: placeholder || "Start Writing",
   };
 
+
   useEffect(() => {
     setEditor(editor);
-  }, [editor]);
+    if(prevContent)setContent(prevContent);
+  }, [editor,prevContent]);
 
   return useMemo(
     () => (
@@ -25,7 +26,7 @@ const Editor = ({ placeholder, setEditor }) => {
         onChange={(newContent) => {}}
       />
     ),
-    []
+    [prevContent,content]
   );
 };
 

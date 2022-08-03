@@ -2,29 +2,56 @@ import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import Editor from "./Editor";
 
-const AddNote = () => {
+const EditNote = ({}) => {
   const navigate = useNavigate();
+  const {id} = useParams();
   const [editor, setEditor] = useState(null);
+  const [content, setContent] = useState(null);
   const { token } = useSelector((state) => state.auth);
   const [title, setTitle] = useState("");
-  const [color, setColor] = useState("");
+  const [color, setColor] = useState(null);
+
+  const getNote = async () => {
+    try {
+      const response = await axios.get(`http://localhost:8080/notes/${id}`, {
+        headers: {
+          auth: token,
+        },
+      });
+      const {
+        data: { success, message, data:{note} },
+      } = response;
+      if (success) {
+        setTitle(note.title);
+        setColor(note.color);
+        setContent(note.content);
+        return toast.success(message);
+      } else {
+        return toast.error(message);
+      }
+    } catch (error) {
+      console.log(error);
+      return toast.error(error.message);
+    }
+  }
 
   useEffect(() => {
     if (!token) {
       navigate("/login");
+    }else{
+        getNote();
     }
   }, [token]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // console.log(editor.current.value);
      try {
       e.preventDefault();
 
-      const response = await axios.post("http://localhost:8080/notes/add", {
+      const response = await axios.put(`http://localhost:8080/notes/${id}`, {
         title,
         content:editor.current.value,
         color
@@ -61,7 +88,7 @@ const AddNote = () => {
             aria-label="Login to your account"
             className="text-2xl font-extrabold leading-6 text-gray-800"
           >
-            New Note
+            Edit Note
           </p>
           <div className="w-full flex items-center justify-between py-5">
             <hr className="w-full bg-gray-400" />
@@ -78,6 +105,7 @@ const AddNote = () => {
               <input
               required
                 onChange={(e) => setTitle(e.target.value)}
+                value={title}
                 aria-label="Enter Title  of the note"
                 role="input"
                 type="text"
@@ -92,6 +120,7 @@ const AddNote = () => {
                 style={{height:"50px"}}
                 onChange={(e) => setColor(e.target.value)}
                 role="input"
+                value={color}
                 type="color"
                 className="bg-gray-200 border rounded focus:outline-none text-md font-medium leading-none text-gray-800 py-3 w-full pl-3 mt-2"
               />
@@ -101,7 +130,7 @@ const AddNote = () => {
                 Content
               </lable>
               <div className="relative flex items-center justify-center">
-                <Editor setEditor={setEditor} />
+                <Editor prevContent={content} setEditor={setEditor} />
               </div>
             </div>
             <div className="mt-8">
@@ -111,7 +140,7 @@ const AddNote = () => {
                 aria-label="create my account"
                 className="focus:ring-2 focus:ring-offset-2 focus:ring-indigo-700 text-sm font-semibold leading-none text-white focus:outline-none bg-indigo-700 border rounded hover:bg-indigo-600 py-4 w-full"
               >
-                Add Note
+                Edit Note
               </button>
             </div>
           </form>
@@ -121,4 +150,4 @@ const AddNote = () => {
   );
 };
 
-export default AddNote;
+export default EditNote;
