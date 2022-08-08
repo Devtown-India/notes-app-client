@@ -6,6 +6,7 @@ import Login from "./components/auth/Login";
 import Signup from "./components/auth/Signup";
 import AddNote from "./components/notes/AddNote";
 import EditNote from "./components/notes/EditNote";
+import Note from "./components/notes/Note";
 import Notes from "./components/notes/Notes";
 import Footer from "./layout/Footer";
 import Navbar from "./layout/Navbar";
@@ -38,6 +39,7 @@ const App = () => {
         <Route path="/login" element={<Login/>}  />
         <Route path="/signup" element={<Signup/>}  />
         <Route path="/notes" element={<Notes/>}  />
+        <Route path="/note/:id" element={<Note/>}  />
         <Route path="/notes/add" element={<AddNote/>}  />
         <Route path="/note/edit/:id" element={<EditNote/>}  />
       </Routes>

@@ -3,8 +3,9 @@ import { Link } from "react-router-dom";
 const Card = ({ title, content, updatedAt, color, id }) => {
   const date = new Date(updatedAt);
   return (
-    <div
-      style={{ background: color ,overflow:"hidden"}}
+    <Link to={`/note/${id}`} >
+     <div
+      style={{ background: color ,overflow:"hidden" , position:"relative"}}
       className="w-full h-64 flex flex-col justify-between dark:bg-gray-800 bg-white dark:border-gray-700 rounded-lg border border-gray-400 mb-6 py-5 px-4"
     >
       <div>
@@ -12,15 +13,14 @@ const Card = ({ title, content, updatedAt, color, id }) => {
           {title}
         </h4>
         <p
-          
           dangerouslySetInnerHTML={{ __html: content }}
           className="text-gray-800 dark:text-gray-100 text-sm"
         ></p>
       </div>
       <div>
-        <div className="flex items-center justify-between text-gray-800 dark:text-gray-100">
+        <div className=" flex items-center justify-between text-gray-800 dark:text-gray-100">
           <p className="text-sm">{date.toDateString()}</p>
-          <div className="w-8 h-8 rounded-full bg-gray-800 dark:bg-gray-100 dark:text-gray-800 text-white flex items-center justify-center">
+          <div style={{position:"absolute", top:"10px", right:"10px"}} className="w-8 h-8 rounded-full bg-gray-800 dark:bg-gray-100 dark:text-gray-800 text-white flex items-center justify-center">
             <Link to={`/note/edit/${id}`}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -43,6 +43,7 @@ const Card = ({ title, content, updatedAt, color, id }) => {
         </div>
       </div>
     </div>
+    </Link>
   );
 };
 
